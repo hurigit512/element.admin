@@ -17,6 +17,8 @@ import i18n from './lang' // Internationalization
 import './icons' // icon
 import './errorLog' // error log
 import './permission' // permission control
+
+// 导入假数据
 import './mock' // simulation data
 
 import * as filters from './filters' // global filters

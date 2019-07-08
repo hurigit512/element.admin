@@ -2,10 +2,18 @@
   <div class="app-container">
     <p class="warn-content">
       {{ $t('guide.description') }}
-      <a href="https://github.com/kamranahmedse/driver.js" target="_blank">driver.js.
-      </a>
+      <a
+        href="https://github.com/kamranahmedse/driver.js"
+        target="_blank"
+      >driver.js.</a>
     </p>
-    <el-button icon="el-icon-question" type="primary" @click.prevent.stop="guide">{{ $t('guide.button') }}</el-button>
+    <el-button
+      icon="el-icon-question"
+      type="primary"
+      @click.prevent.stop="guide"
+    >{{ $t('guide.button') }}</el-button>
+
+    <el-button @click="fn">测试新功能</el-button>
   </div>
 </template>
 
@@ -28,6 +36,10 @@ export default {
     guide() {
       this.driver.defineSteps(steps)
       this.driver.start()
+    },
+
+    fn() {
+      alert(12)
     }
   }
 }

@@ -32,6 +32,8 @@ import nestedRouter from './modules/nested'
     affix: true                  if true, the tag will affix in the tags-view
   }
 **/
+
+// 这个数组中的路由不需要权限控制，任何人都可以直接访问
 export const constantRouterMap = [
   {
     path: '/redirect',
@@ -44,8 +46,10 @@ export const constantRouterMap = [
       }
     ]
   },
+  // 登录组件的路由：
   {
     path: '/login',
+    // Vue路由懒加载（按需加载）的语法：
     component: () => import('@/views/login/index'),
     hidden: true
   },
@@ -73,7 +77,12 @@ export const constantRouterMap = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'dashboard', icon: 'dashboard', noCache: true, affix: true }
+        meta: {
+          title: 'dashboard',
+          icon: 'dashboard',
+          noCache: true,
+          affix: true
+        }
       }
     ]
   },
@@ -111,6 +120,9 @@ export default new Router({
   routes: constantRouterMap
 })
 
+// 这个数组中的路由是带有权限控制的，只有有对应的权限才能访问到对应的菜单
+// 如果路由的 meta 属性中带有 roles，此时，只有 显示指定 的角色才能访问该路由
+// 如果路由的 meta 属性中没有 roles，那么，这个路由不需要权限判定，任何人都可以访问
 export const asyncRouterMap = [
   {
     path: '/permission',
@@ -144,15 +156,50 @@ export const asyncRouterMap = [
     ]
   },
 
+  // 添加一个新的路由
+  // {
+  //   path: '/itcast',
+  //   component: () => import('@/views/itcast/index')
+  // },
+
+  {
+    path: '/itcast',
+    // 当前项目中的路由都是父子路由嵌套，父级路由的组件都为：Layout
+    // 子路由的组件，才是我们自己添加的组件
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/itcast/index'),
+        // 当前项目中依赖于这个name属性，来生成 面包屑 导航
+        name: 'Itcast',
+        meta: {
+          // 用来设置菜单标题，应该在 国际化 插件中进行配置，也就是在 lang 目录中
+          title: 'itcast',
+          // 用来设置菜单的图标
+          icon: 'password'
+          // noCache: true /* roles: ['admin'] */
+        }
+      }
+    ]
+  },
+
   {
     path: '/icon',
     component: Layout,
+    meta: {
+      // roles: ['admin']
+    },
     children: [
       {
         path: 'index',
         component: () => import('@/views/svg-icons/index'),
         name: 'Icons',
-        meta: { title: 'icons', icon: 'icon', noCache: true }
+        meta: {
+          title: 'icons',
+          icon: 'icon',
+          noCache: true /* roles: ['admin'] */
+        }
       }
     ]
   },

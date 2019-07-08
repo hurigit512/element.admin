@@ -1,9 +1,10 @@
 import Vue from 'vue'
+// Vue官方提供的国际化插件
 import VueI18n from 'vue-i18n'
 import Cookies from 'js-cookie'
 import elementEnLocale from 'element-ui/lib/locale/lang/en' // element-ui lang
-import elementZhLocale from 'element-ui/lib/locale/lang/zh-CN'// element-ui lang
-import elementEsLocale from 'element-ui/lib/locale/lang/es'// element-ui lang
+import elementZhLocale from 'element-ui/lib/locale/lang/zh-CN' // element-ui lang
+import elementEsLocale from 'element-ui/lib/locale/lang/es' // element-ui lang
 import enLocale from './en'
 import zhLocale from './zh'
 import esLocale from './es'
@@ -28,6 +29,7 @@ const messages = {
 const i18n = new VueI18n({
   // set locale
   // options: en | zh | es
+  // 表示当前使用的语言：默认值为 en 也就是英文
   locale: Cookies.get('language') || 'en',
   // set locale messages
   messages

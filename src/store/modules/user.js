@@ -45,43 +45,60 @@ const user = {
 
   actions: {
     // 用户名登录
+    // commit 表示提交 mutation 的方法
+    // userInfo 表示登录组件中传递过来的 { username, password }
     LoginByUsername({ commit }, userInfo) {
       const username = userInfo.username.trim()
+
       return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then(response => {
-          const data = response.data
-          commit('SET_TOKEN', data.token)
-          setToken(response.data.token)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        // loginByUsername 是 api/login.js 中提供的登录功能，在这完成了 请求的发送
+        loginByUsername(username, userInfo.password)
+          .then(response => {
+            // response 表示 axios 发送请求后获取到的结果
+            console.log('loginByUsername -> axios：', response)
+            const data = response.data
+
+            // 提交mutation
+            // 将登录状态token，存储到 store 的state中
+            commit('SET_TOKEN', data.token)
+            // 将登录状态token，存储到 cookie 中
+            setToken(response.data.token)
+            resolve()
+          })
+          .catch(error => {
+            reject(error)
+          })
       })
     },
 
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
-          // 由于mockjs 不支持自定义状态码只能这样hack
-          if (!response.data) {
-            reject('Verification failed, please login again.')
-          }
-          const data = response.data
+        getUserInfo(state.token)
+          .then(response => {
+            // 由于mockjs 不支持自定义状态码只能这样hack
+            if (!response.data) {
+              reject('Verification failed, please login again.')
+            }
 
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
-          } else {
-            reject('getInfo: roles must be a non-null array!')
-          }
+            console.log('GetUserInfo => ', response)
+            const data = response.data
 
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
+            if (data.roles && data.roles.length > 0) {
+              // 验证返回的roles是否是一个非空数组
+              commit('SET_ROLES', data.roles)
+            } else {
+              reject('getInfo: roles must be a non-null array!')
+            }
+
+            commit('SET_NAME', data.name)
+            commit('SET_AVATAR', data.avatar)
+            commit('SET_INTRODUCTION', data.introduction)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
       })
     },
 
@@ -102,14 +119,19 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          removeToken()
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        logout(state.token)
+          .then(() => {
+            // 清空token
+            commit('SET_TOKEN', '')
+            // 清空角色
+            commit('SET_ROLES', [])
+            // 清除cookie中的token
+            removeToken()
+            resolve()
+          })
+          .catch(error => {
+            reject(error)
+          })
       })
     },
 

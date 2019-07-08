@@ -1,4 +1,5 @@
 import Mock from 'mockjs'
+
 import loginAPI from './login'
 import articleAPI from './article'
 import remoteSearchAPI from './remoteSearch'

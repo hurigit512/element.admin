@@ -1,10 +1,14 @@
+// request 就是 axios
 import request from '@/utils/request'
 
+// 发送登录请求：
 export function loginByUsername(username, password) {
   const data = {
     username,
     password
   }
+
+  // 调用 axios， 发送请求
   return request({
     url: '/login/login',
     method: 'post',
@@ -12,6 +16,7 @@ export function loginByUsername(username, password) {
   })
 }
 
+// 退出
 export function logout() {
   return request({
     url: '/login/logout',
@@ -26,4 +31,3 @@ export function getUserInfo(token) {
     params: { token }
   })
 }
-

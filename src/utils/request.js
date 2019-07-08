@@ -5,6 +5,9 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
+  // 此处，通过 process.env.BASE_API 来动态根据当前环境引用对应的接口基础地址
+  // 如果是开发环境，就表示： dev.env.js 中的 BASE_API，也就是开发期间的接口地址
+  // 如果是生产环境，就表示： prod.env.js 中的 BASE_API，也就是打包上线的接口地址
   baseURL: process.env.BASE_API, // api 的 base_url
   timeout: 5000 // request timeout
 })
